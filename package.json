@@ -1,0 +1,26 @@
+{
+  "name": "socialnetwork-back-end-mongoose-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericc97/socialnetwork-back-end-mongoose-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericc97/socialnetwork-back-end-mongoose-/issues"
+  },
+  "homepage": "https://github.com/ericc97/socialnetwork-back-end-mongoose-#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.1"
+  }
+}
