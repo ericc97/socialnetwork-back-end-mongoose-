@@ -93,33 +93,39 @@ const thoughtController = {
     },
 
     deleteThought({ params }, res ){
-        Thought.findOneAndDelete({
-            _id: params.thoughtId
-        })
-        .then(dbThoughtData => {
-            console.log(dbThoughtData)
-            if(!dbThoughtData){
-                res.status(404).json('Error no thought found to delete with that id')
-                return;
-            }
-            User.findOneAndUpdate(
-                { username: dbThoughtData.username },
-                { $pull: { thoughts: params.thoughtId }},
-                { new:true }
+        Thought.findOneAndDelete(
+            {_id: params.thoughtId}
+        ).then(dbThoughtData => {
+            return User.findOneAndUpdate(
+            { _id: dbThoughtData.userId}, 
+            { $pull: {thoughts: dbThoughtData._id}},
+            { new: true }
             )
-            .select('-__v')
-            .then(dbThoughtData => {
-                if(!dbThoughtData){
-                    res.status(404).json({ message: 'User Update Faileddddddddd'})
-                    return;
-                }
-                res.json(dbThoughtData)
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).json(err)
-            })
-        })
+        }) .then(dbUserData => res.json(dbUserData))
+        // .then(dbThoughtData => {
+        //     console.log(dbThoughtData)
+        //     if(!dbThoughtData){
+        //         res.status(404).json('Error no thought found to delete with that id')
+        //         return;
+        //     }
+        //     User.findOneAndUpdate(
+        //         { username: dbThoughtData.username },
+        //         { $pull: { thoughts: params.thoughtId }},
+        //         { new:true }
+        //     )
+        //     .select('-__v')
+        //     .then(dbThoughtData => {
+        //         if(!dbThoughtData){
+        //             res.status(404).json({ message: 'User Update Faileddddddddd'})
+        //             return;
+        //         }
+        //         res.json(dbThoughtData)
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         res.status(500).json(err)
+        //     })
+        // })
         .catch(err => {
             console.log(err)
             res.status(500).json(err)
