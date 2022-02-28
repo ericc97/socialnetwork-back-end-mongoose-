@@ -1,3 +1,4 @@
+const req = require('express/lib/request');
 const { User, Thought } = require('../models');
 const { db } = require('../models/User');
 
@@ -23,30 +24,38 @@ const thoughtController = {
 
     createThought({ body }, res ){
         try{
-            const user = User.findOne({ username: body.username });
-
-            if(!user) {
-                throw new Error(
-                    'No User found with that id'
+            Thought.create( body )
+            .then(dbThoughtData => {
+                return User.findOneAndUpdate(
+                { _id: body.userId}, 
+                { $push: {thoughts: dbThoughtData._id}},
+                { new: true }
                 )
-            }
+            }) .then(dbUserData => res.json(dbUserData))
+        //     const user = User.findOne({ username: body.username });
 
-            const createThought = Thought.create(body);
+        //     if(!user) {
+        //         throw new Error(
+        //             'No User found with that id'
+        //         )
+        //     }
 
-            const updateUSer = User.findOneAndUpdate(
-                { username: body.username },
-                { $push: { thoughts: createThought._id}},
-                { new:true }
-            )
-            .select('-__v')
+        //     const createThought = Thought.create(body);
 
-            if(!updateUSer){
-                throw new Error(
-                    'Failed to update user!'
-                )
-            }
-            res.json(createThought);
-        }catch({ message }) {
+        //     const updateUSer = User.findOneAndUpdate(
+        //         { username: body.username },
+        //         { $push: { thoughts: createThought._id}},
+        //         { new:true }
+        //     )
+        //     .select('-__v')
+
+        //     if(!updateUSer){
+        //         throw new Error(
+        //             'Failed to update user!'
+        //         )
+        //     }
+        //     res.json(createThought);
+         }catch({ message }) {
             res.status(500).json({ message })
         }
     },
